@@ -41,7 +41,7 @@
     group: "{{ steam_user }}"
     state: directory
 
-- name: Create game installation folder
+- name: Create SteamCMD installation script folder
   become: 'True'
   file:
     path: "{{ steamcmd_installation_folder }}"

@@ -6,8 +6,19 @@ driver:
 lint:
   name: yamllint
 platforms:
-  - name: instance
-    image: centos:7
+  - name: test-instance-ubuntu
+    image: eldius/ubuntu-systemd:latest
+    command: /sbin/init
+    security_opts:
+      - seccomp=unconfined
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+    tmpfs:
+      - /tmp
+      - /run
+      - /run/lock
+    env:
+      container: docker
 provisioner:
   name: ansible
   lint:

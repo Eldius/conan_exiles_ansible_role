@@ -1,7 +1,7 @@
 ---
 # defaults file for conan-exiles-ansible-role
-game_installation_folder: /usr/local/steam-services/conan/conan_exiles
-steamcmd_installation_folder: /usr/local/steam-services/steam
 steam_user: steam
-steamcmd_install_command: "steamcmd.sh +runscript {{ steamcmd_installation_folder }}/install_conan_server.txt"
+steamcmd_installation_folder: /home/{{ steam_user }}/steam-services/steam
+game_installation_folder: "/home/{{ steam_user }}/steam-services/conan/conan_exiles"
+steamcmd_install_command: "steamcmd.sh -nocache +runscript {{ steamcmd_installation_folder }}/install_conan_server.txt"
 steamcmd_download_link: "https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz"

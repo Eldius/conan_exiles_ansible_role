@@ -1,6 +1,7 @@
 @ShutdownOnFailedCommand 1
 @NoPromptForPassword 1
 @sSteamCmdForcePlatformType windows
+@bCSForceNoCache 1
 login anonymous
 force_install_dir {{ game_installation_folder }}
 app_update 443030 validate
