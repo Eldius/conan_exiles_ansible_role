@@ -25,6 +25,7 @@
     - mc
     - joe
     - lib32gcc1
+    - tmux
     #- wine32
 
 - name: Create Steam user
@@ -39,6 +40,7 @@
     path: "{{ game_installation_folder }}"
     owner: "{{ steam_user }}"
     group: "{{ steam_user }}"
+    mode: u=rwx,g=r,o=r
     state: directory
 
 - name: Create SteamCMD installation script folder
@@ -47,6 +49,7 @@
     path: "{{ steamcmd_installation_folder }}"
     owner: "{{ steam_user }}"
     group: "{{ steam_user }}"
+    mode: u=rwx,g=r,o=r
     state: directory
 
 - name: Unarchive a file with extra options
@@ -56,7 +59,7 @@
     dest: /usr/local/bin
     owner: "{{ steam_user }}"
     group: "{{ steam_user }}"
-    mode: u=rwx,g=rx,o=rx
+    mode: u=rwx,g=r,o=r
     remote_src: 'True'
   args:
     creates: /usr/local/bin/steamcmd.sh
@@ -69,6 +72,7 @@
     dest: "{{ steamcmd_installation_folder }}/install_conan_server.txt"
     owner: "{{ steam_user }}"
     group: "{{ steam_user }}"
+    mode: u=rwx,g=r,o=r
 
 - name: Install SteamCMD
   become: 'True'
