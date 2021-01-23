@@ -8,25 +8,26 @@
 - name: Install dependencies
   become: 'True'
   package:
-    name: "{{ item }}"
+    name:
+      - python3-software-properties
+      - curl
+      - screen
+      - ffmpeg
+      - wine-stable
+      - xvfb
+      - git
+      - wget
+      - mc
+      - joe
+      - lib32gcc1
+      - tmux
+      - wine64
+      - wine32
+      #- wine32
     state: present
     update_cache: 'True'
     autoremove: 'True'
     install_recommends: 'True'
-  with_items:
-    - python3-software-properties
-    - curl
-    - screen
-    - ffmpeg
-    - wine-stable
-    - xvfb
-    - git
-    - wget
-    - mc
-    - joe
-    - lib32gcc1
-    - tmux
-    #- wine32
 
 - name: Create Steam user
   become: 'True'
@@ -56,13 +57,13 @@
   become: 'True'
   unarchive:
     src: "{{ steamcmd_download_link }}"
-    dest: /usr/local/bin
+    dest: "{{ steamcmd_installation_folder }}"
     owner: "{{ steam_user }}"
     group: "{{ steam_user }}"
     mode: u=rwx,g=r,o=r
     remote_src: 'True'
   args:
-    creates: /usr/local/bin/steamcmd.sh
+    creates: "{{ steamcmd_installation_folder }}/steamcmd.sh"
 
 - name: Prepare server installation script
   become: 'True'
@@ -79,4 +80,5 @@
   become_user: "{{ steam_user }}"
   command: "{{ steamcmd_install_command }}"
   args:
+    chdir: "{{ steamcmd_installation_folder }}"
     creates: /usr/local/steam-services/conan/conan_exiles/ConanSandboxServer.exe

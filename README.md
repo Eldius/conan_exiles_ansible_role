@@ -51,6 +51,7 @@ Reference Links
 
 - [Valve Developer Community - SteamCMD](https://developer.valvesoftware.com/wiki/SteamCMD)
 - [Valve Developer Community - Command Line Options](https://developer.valvesoftware.com/wiki/Command_Line_Options)
+- [Dedicated Server Setup: Linux and Wine](https://conanexiles.gamepedia.com/Dedicated_Server_Setup:_Linux_and_Wine)
 
 Drafts
 ------
