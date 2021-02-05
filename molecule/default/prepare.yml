@@ -1,0 +1,5 @@
+---
+- name: Prepare
+  hosts: all
+  roles:
+    - role: steamcmd_ansible_role

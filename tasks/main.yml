@@ -1,19 +1,15 @@
 ---
 # tasks file for conan-exiles-ansible-role
 - name: Upgrade system
-  become: 'True'
+  become: "True"
   apt:
     upgrade: dist
-    update_cache: 'True'
-    autoremove: 'True'
-    install_recommends: 'True'
-
-- name: Setup SteamCMD
-  include_role:
-    name: steamcmd_ansible_role
+    update_cache: "True"
+    autoremove: "True"
+    install_recommends: "True"
 
 - name: Create game installation folder
-  become: 'True'
+  become: "True"
   become_user: "{{ steamcmd_user }}"
   file:
     path: "{{ game_installation_folder }}"
@@ -23,7 +19,7 @@
     state: directory
 
 - name: Prepare server installation script
-  become: 'True'
+  become: "True"
   become_user: "{{ steamcmd_user }}"
   template:
     src: install_conan_server.txt
@@ -33,16 +29,16 @@
     mode: u=rwx,g=r,o=r
 
 - name: Install Conan Exiles Server
-  become: 'True'
+  become: "True"
   become_user: "{{ steamcmd_user }}"
   command: "{{ steamcmd_command }} +runscript {{ game_installation_script }}"
-  ignore_errors: 'True'
+  ignore_errors: "True"
   args:
     chdir: "{{ steamcmd_installation_folder }}"
     creates: "{{ game_installation_folder }}/ConanSandboxServer.exe"
 
 - name: Pack install folder
-  become: 'True'
+  become: "True"
   become_user: "{{ steamcmd_user }}"
   community.general.archive:
     path: "{{ game_installation_folder }}"
@@ -54,7 +50,7 @@
   when: conan_debug == 'True'
 
 - name: Copy packed files
-  become: 'True'
+  become: "True"
   become_user: "{{ steamcmd_user }}"
   fetch:
     src: "{{ game_installation_folder }}_pack.tar.bz2"
