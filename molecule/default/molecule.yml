@@ -1,6 +1,7 @@
 ---
 dependency:
   name: galaxy
+  role-file: requirements.yml
 driver:
   name: docker
 lint: |   
@@ -8,17 +9,21 @@ lint: |
     ansible-lint
     flake8
 platforms:
+  #- name: test-instance-ubuntu
+  #  image: eldius/ubuntu-systemd:latest
+  #  command: /sbin/init
+  #  security_opts:
+  #    - seccomp=unconfined
+  #  volumes:
+  #    - /sys/fs/cgroup:/sys/fs/cgroup:ro
+  #  tmpfs:
+  #    - /tmp
+  #    - /run
+  #    - /run/lock
+  #  env:
+  #    container: docker
   - name: test-instance-ubuntu
-    image: eldius/ubuntu-systemd:latest
-    command: /sbin/init
-    security_opts:
-      - seccomp=unconfined
-    volumes:
-      - /sys/fs/cgroup:/sys/fs/cgroup:ro
-    tmpfs:
-      - /tmp
-      - /run
-      - /run/lock
+    image: ubuntu:latest
     env:
       container: docker
 provisioner:

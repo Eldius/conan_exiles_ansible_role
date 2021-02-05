@@ -1,0 +1,4 @@
+---
+ # SteamCMD role
+ - src: https://github.com/Eldius/steamcmd_ansible_role.git
+   name: steamcmd_ansible_role

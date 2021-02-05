@@ -1,0 +1,3 @@
+
+test:
+	molecule test

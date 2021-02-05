@@ -3,82 +3,60 @@
 - name: Upgrade system
   become: 'True'
   apt:
-    upgrade: 'True'
-
-- name: Install dependencies
-  become: 'True'
-  package:
-    name:
-      - python3-software-properties
-      - curl
-      - screen
-      - ffmpeg
-      - wine-stable
-      - xvfb
-      - git
-      - wget
-      - mc
-      - joe
-      - lib32gcc1
-      - tmux
-      - wine64
-      - wine32
-      #- wine32
-    state: present
+    upgrade: dist
     update_cache: 'True'
     autoremove: 'True'
     install_recommends: 'True'
 
-- name: Create Steam user
-  become: 'True'
-  user:
-    name: "{{ steam_user }}"
-    system: 'True'
+- name: Setup SteamCMD
+  include_role:
+    name: steamcmd_ansible_role
 
 - name: Create game installation folder
   become: 'True'
+  become_user: "{{ steamcmd_user }}"
   file:
     path: "{{ game_installation_folder }}"
-    owner: "{{ steam_user }}"
-    group: "{{ steam_user }}"
+    owner: "{{ steamcmd_user }}"
+    group: "{{ steamcmd_user }}"
     mode: u=rwx,g=r,o=r
     state: directory
-
-- name: Create SteamCMD installation script folder
-  become: 'True'
-  file:
-    path: "{{ steamcmd_installation_folder }}"
-    owner: "{{ steam_user }}"
-    group: "{{ steam_user }}"
-    mode: u=rwx,g=r,o=r
-    state: directory
-
-- name: Unarchive a file with extra options
-  become: 'True'
-  unarchive:
-    src: "{{ steamcmd_download_link }}"
-    dest: "{{ steamcmd_installation_folder }}"
-    owner: "{{ steam_user }}"
-    group: "{{ steam_user }}"
-    mode: u=rwx,g=r,o=r
-    remote_src: 'True'
-  args:
-    creates: "{{ steamcmd_installation_folder }}/steamcmd.sh"
 
 - name: Prepare server installation script
   become: 'True'
-  become_user: "{{ steam_user }}"
+  become_user: "{{ steamcmd_user }}"
   template:
     src: install_conan_server.txt
-    dest: "{{ steamcmd_installation_folder }}/install_conan_server.txt"
-    owner: "{{ steam_user }}"
-    group: "{{ steam_user }}"
+    dest: "{{ game_installation_script }}"
+    owner: "{{ steamcmd_user }}"
+    group: "{{ steamcmd_user }}"
     mode: u=rwx,g=r,o=r
 
-- name: Install SteamCMD
+- name: Install Conan Exiles Server
   become: 'True'
-  become_user: "{{ steam_user }}"
-  command: "{{ steamcmd_install_command }}"
+  become_user: "{{ steamcmd_user }}"
+  command: "{{ steamcmd_command }} +runscript {{ game_installation_script }}"
+  ignore_errors: 'True'
   args:
     chdir: "{{ steamcmd_installation_folder }}"
-    creates: /usr/local/steam-services/conan/conan_exiles/ConanSandboxServer.exe
+    creates: "{{ game_installation_folder }}/ConanSandboxServer.exe"
+
+- name: Pack install folder
+  become: 'True'
+  become_user: "{{ steamcmd_user }}"
+  community.general.archive:
+    path: "{{ game_installation_folder }}"
+    dest: "{{ game_installation_folder }}_pack.tar.bz2"
+    format: bz2
+    owner: "{{ steamcmd_user }}"
+    group: "{{ steamcmd_user }}"
+    mode: u=rwx,g=rwx,o=rwx
+  when: conan_debug == 'True'
+
+- name: Copy packed files
+  become: 'True'
+  become_user: "{{ steamcmd_user }}"
+  fetch:
+    src: "{{ game_installation_folder }}_pack.tar.bz2"
+    dest: tmp/files
+  when: conan_debug == 'True'
